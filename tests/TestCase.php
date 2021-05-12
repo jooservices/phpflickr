@@ -1,14 +1,13 @@
 <?php
 
-namespace Samwilson\PhpFlickr\Tests;
+namespace Jooservices\PhpFlickr\Tests;
 
 use OAuth\OAuth1\Token\StdOAuth1Token;
 use PHPUnit\Framework\TestCase as PhpUnitTestCase;
-use Samwilson\PhpFlickr\PhpFlickr;
+use Jooservices\PhpFlickr\PhpFlickr;
 
 abstract class TestCase extends PhpUnitTestCase
 {
-
     /** @var PhpFlickr */
     private $flickr;
 

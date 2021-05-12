@@ -1,9 +1,9 @@
 <?php
 
-namespace Samwilson\PhpFlickr\Tests\ApiMethodGroup;
+namespace Jooservices\PhpFlickr\Tests\ApiMethodGroup;
 
-use Samwilson\PhpFlickr\PhotosApi;
-use Samwilson\PhpFlickr\Tests\TestCase;
+use Jooservices\PhpFlickr\PhotosApi;
+use Jooservices\PhpFlickr\Tests\TestCase;
 
 class UrlsApiTest extends TestCase
 {

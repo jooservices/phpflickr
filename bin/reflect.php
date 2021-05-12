@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use Samwilson\PhpFlickr\PhpFlickr;
+use Jooservices\PhpFlickr\PhpFlickr;
 use Stash\Driver\FileSystem;
 use Stash\Pool as StashPool;
 
@@ -30,7 +30,7 @@ foreach ($methodsResponse as $method) {
 foreach ($methods as $methodGroupName => $methodInfo) {
     $classname = basename(str_replace('\\', '/', $methodInfo['classname']));
     $php = "<?php\n\n"
-        . "namespace Samwilson\PhpFlickr;\n\n"
+        . "namespace Jooservices\PhpFlickr;\n\n"
         . "class " . $classname . " extends ApiMethodGroup\n{\n\n";
     foreach ($methodInfo['methods'] as $method => $shortMethod) {
         $details = $phpflickr->reflection()->getMethodInfo($method);

@@ -1,11 +1,11 @@
 <?php
 
-namespace Samwilson\PhpFlickr\Tests\ApiMethodGroup;
+namespace Jooservices\PhpFlickr\Tests\ApiMethodGroup;
 
 use DateTime;
-use Samwilson\PhpFlickr\PhpFlickr;
-use Samwilson\PhpFlickr\Tests\TestCase;
-use Samwilson\PhpFlickr\Util;
+use Jooservices\PhpFlickr\PhpFlickr;
+use Jooservices\PhpFlickr\Tests\TestCase;
+use Jooservices\PhpFlickr\Util;
 
 class PhotosApiTest extends TestCase
 {

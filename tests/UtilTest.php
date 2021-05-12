@@ -1,8 +1,8 @@
 <?php
 
-namespace Samwilson\PhpFlickr\Tests;
+namespace Jooservices\PhpFlickr\Tests;
 
-use Samwilson\PhpFlickr\Util;
+use Jooservices\PhpFlickr\Util;
 
 class UtilTest extends TestCase
 {

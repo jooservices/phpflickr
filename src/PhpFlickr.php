@@ -19,7 +19,7 @@
  *
  */
 
-namespace Samwilson\PhpFlickr;
+namespace Jooservices\PhpFlickr;
 
 use DateInterval;
 use DateTime;
@@ -35,7 +35,7 @@ use OAuth\OAuth1\Token\StdOAuth1Token;
 use OAuth\OAuth2\Token\TokenInterface;
 use OAuth\ServiceFactory;
 use Psr\Cache\CacheItemPoolInterface;
-use Samwilson\PhpFlickr\Oauth\PhpFlickrService;
+use Jooservices\PhpFlickr\Oauth\PhpFlickrService;
 
 class PhpFlickr
 {

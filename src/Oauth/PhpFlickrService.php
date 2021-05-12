@@ -1,6 +1,6 @@
 <?php
 
-namespace Samwilson\PhpFlickr\Oauth;
+namespace Jooservices\PhpFlickr\Oauth;
 
 use OAuth\Common\Consumer\CredentialsInterface;
 use OAuth\Common\Http\Client\ClientInterface;

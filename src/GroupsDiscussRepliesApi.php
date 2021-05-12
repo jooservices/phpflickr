@@ -1,6 +1,6 @@
 <?php
 
-namespace Samwilson\PhpFlickr;
+namespace Jooservices\PhpFlickr;
 
 class GroupsDiscussRepliesApi extends ApiMethodGroup
 {

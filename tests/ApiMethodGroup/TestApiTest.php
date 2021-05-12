@@ -1,10 +1,10 @@
 <?php
 
-namespace Samwilson\PhpFlickr\Tests\ApiMethodGroup;
+namespace Jooservices\PhpFlickr\Tests\ApiMethodGroup;
 
-use Samwilson\PhpFlickr\FlickrException;
-use Samwilson\PhpFlickr\PhpFlickr;
-use Samwilson\PhpFlickr\Tests\TestCase;
+use Jooservices\PhpFlickr\FlickrException;
+use Jooservices\PhpFlickr\PhpFlickr;
+use Jooservices\PhpFlickr\Tests\TestCase;
 
 class TestApiTest extends TestCase
 {

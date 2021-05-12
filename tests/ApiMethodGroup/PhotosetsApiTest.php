@@ -1,15 +1,14 @@
 <?php
 
-namespace Samwilson\PhpFlickr\Tests\ApiMethodGroup;
+namespace Jooservices\PhpFlickr\Tests\ApiMethodGroup;
 
-use Samwilson\PhpFlickr\Tests\TestCase;
+use Jooservices\PhpFlickr\Tests\TestCase;
 
 class PhotosetsApiTest extends TestCase
 {
-
     protected $testPhotoId;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $flickr = $this->getFlickr(true);
@@ -18,7 +17,7 @@ class PhotosetsApiTest extends TestCase
         $this->testPhotoId = $uploaded['photoid'];
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         $this->getFlickr(true)->photos_delete($this->testPhotoId);
     }
