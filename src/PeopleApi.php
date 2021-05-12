@@ -20,7 +20,7 @@ class PeopleApi extends ApiMethodGroup
             'flickr.people.findByEmail',
             ['find_email' => $findEmail]
         );
-        return isset($response['user']) ? $response['user'] : false;
+        return $response['user'] ?? false;
     }
 
     /**
@@ -38,7 +38,7 @@ class PeopleApi extends ApiMethodGroup
             'flickr.people.findByUsername',
             ['username' => $username]
         );
-        return isset($response['user']) ? $response['user'] : false;
+        return $response['user'] ?? false;
     }
 
     /**
@@ -162,7 +162,7 @@ class PeopleApi extends ApiMethodGroup
             'page' => $page,
         ];
         $photos = $this->flickr->request('flickr.people.getPhotos', $params);
-        return isset($photos['photos']) ? $photos['photos'] : false;
+        return $photos['photos'] ?? false;
     }
 
     /**

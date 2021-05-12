@@ -3,9 +3,8 @@
 namespace Jooservices\PhpFlickr;
 
 use CURLFile;
-use OAuth\Common\Exception\Exception as OauthException;
 use OAuth\Common\Exception\Exception;
-use SimpleXMLElement;
+use OAuth\Common\Exception\Exception as OauthException;
 
 class Uploader
 {
@@ -18,6 +17,7 @@ class Uploader
 
     /** @var string */
     protected $replaceEndpoint = 'https://up.flickr.com/services/replace/';
+    private string|bool $response;
 
     /**
      * @param PhpFlickr $flickr

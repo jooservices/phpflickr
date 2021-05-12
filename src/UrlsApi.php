@@ -85,7 +85,7 @@ class UrlsApi extends ApiMethodGroup
     public function getGroup($groupId)
     {
         $response = $this->flickr->request('flickr.urls.getGroup', ['group_id' => $groupId]);
-        return isset($response['group']['url']) ? $response['group']['url'] : false;
+        return $response['group']['url'] ?? false;
     }
 
     /**
@@ -100,7 +100,7 @@ class UrlsApi extends ApiMethodGroup
     public function getUserPhotos($userId = null)
     {
         $response = $this->flickr->request('flickr.urls.getUserPhotos', ['user_id' => $userId]);
-        return isset($response['user']['url']) ? $response['user']['url'] : false;
+        return $response['user']['url'] ?? false;
     }
 
     /**
@@ -115,7 +115,7 @@ class UrlsApi extends ApiMethodGroup
     public function getUserProfile($userId = null)
     {
         $response = $this->flickr->request('flickr.urls.getUserProfile', ['user_id' => $userId]);
-        return isset($response['user']['url']) ? $response['user']['url'] : false;
+        return $response['user']['url'] ?? false;
     }
 
     /**
@@ -142,7 +142,7 @@ class UrlsApi extends ApiMethodGroup
     public function lookupGroup($url)
     {
         $response = $this->flickr->request('flickr.urls.lookupGroup', ['url' => $url]);
-        return isset($response['group']) ? $response['group'] : false;
+        return $response['group'] ?? false;
     }
 
     /**
@@ -157,6 +157,6 @@ class UrlsApi extends ApiMethodGroup
     public function lookupUser($url)
     {
         $response = $this->flickr->request('flickr.urls.lookupUser', ['url' => $url]);
-        return isset($response['user']) ? $response['user'] : false;
+        return $response['user'] ?? false;
     }
 }

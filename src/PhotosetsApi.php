@@ -46,7 +46,7 @@ class PhotosetsApi extends ApiMethodGroup
             'description' => $description,
         ];
         $response = $this->flickr->request('flickr.photosets.create', $args, true);
-        return isset($response['photoset']) ? $response['photoset'] : false;
+        return $response['photoset'] ?? false;
     }
 
     /**
@@ -145,7 +145,7 @@ class PhotosetsApi extends ApiMethodGroup
             'user_id' => $userId,
         ];
         $response = $this->flickr->request('flickr.photosets.getInfo', $args);
-        return isset($response['photoset']) ? $response['photoset'] : false;
+        return $response['photoset'] ?? false;
     }
 
     /**
@@ -191,7 +191,7 @@ class PhotosetsApi extends ApiMethodGroup
             'sort_groups' => $sortGroups,
         ];
         $response = $this->flickr->request('flickr.photosets.getList', $args);
-        return isset($response['photosets']) ? $response['photosets'] : false;
+        return $response['photosets'] ?? false;
     }
 
     /**
@@ -238,7 +238,7 @@ class PhotosetsApi extends ApiMethodGroup
             'media' => $media,
         ];
         $response = $this->flickr->request('flickr.photosets.getPhotos', $args);
-        return isset($response['photoset']) ? $response['photoset'] : false;
+        return $response['photoset'] ?? false;
     }
 
     /**

@@ -24,9 +24,9 @@ namespace Jooservices\PhpFlickr;
 use DateInterval;
 use DateTime;
 use Exception;
+use Jooservices\PhpFlickr\Oauth\PhpFlickrService;
 use OAuth\Common\Consumer\Credentials;
 use OAuth\Common\Http\Client\CurlClient;
-use OAuth\Common\Http\Exception\TokenResponseException;
 use OAuth\Common\Http\Uri\Uri;
 use OAuth\Common\Storage\Memory;
 use OAuth\Common\Storage\TokenStorageInterface;
@@ -35,7 +35,6 @@ use OAuth\OAuth1\Token\StdOAuth1Token;
 use OAuth\OAuth2\Token\TokenInterface;
 use OAuth\ServiceFactory;
 use Psr\Cache\CacheItemPoolInterface;
-use Jooservices\PhpFlickr\Oauth\PhpFlickrService;
 
 class PhpFlickr
 {
@@ -99,9 +98,8 @@ class PhpFlickr
      * PhpFlickr constructor.
      * @param $apiKey
      * @param null $secret
-     * @param bool $dieOnError Deprecated, does nothing.
      */
-    public function __construct($apiKey, $secret = null, $dieOnError = false)
+    public function __construct($apiKey, $secret = null)
     {
         $this->api_key = $apiKey;
         $this->secret = $secret;
@@ -203,7 +201,7 @@ class PhpFlickr
             if (empty($value)) {
                 unset($request[$key]);
             } else {
-                $request[$key] = (string) $request[$key];
+                $request[$key] = (string)$request[$key];
             }
         }
         $cacheKey = md5(serialize($request));
@@ -248,7 +246,7 @@ class PhpFlickr
             if (empty($value)) {
                 unset($request[$key]);
             } else {
-                $request[$key] = (string) $request[$key];
+                $request[$key] = (string)$request[$key];
             }
         }
         $cacheKey = md5(serialize($request));
@@ -259,10 +257,10 @@ class PhpFlickr
             return $this->cachePool->save($item);
         } elseif ($this->cache == 'db') {
             $response = urlencode($response);
-            $sql = 'INSERT INTO '.$this->cache_table.' (request, response, expiration) 
-						VALUES (\''.$cacheKey.'\', \''.$response.'\', TIMESTAMPADD(SECOND,'.$this->cache_expire.',CURRENT_TIMESTAMP))
-						ON DUPLICATE KEY UPDATE response=\''.$response.'\', 
-						expiration=TIMESTAMPADD(SECOND,'.$this->cache_expire.',CURRENT_TIMESTAMP) ';
+            $sql = 'INSERT INTO ' . $this->cache_table . ' (request, response, expiration) 
+						VALUES (\'' . $cacheKey . '\', \'' . $response . '\', TIMESTAMPADD(SECOND,' . $this->cache_expire . ',CURRENT_TIMESTAMP))
+						ON DUPLICATE KEY UPDATE response=\'' . $response . '\', 
+						expiration=TIMESTAMPADD(SECOND,' . $this->cache_expire . ',CURRENT_TIMESTAMP) ';
 
             $result = mysqli_query($this->cache_db, $sql);
             if (!$result) {
@@ -284,8 +282,8 @@ class PhpFlickr
 
     /**
      * Set a custom post() callback.
-     * @deprecated since 4.1.0
      * @param callback $function
+     * @deprecated since 4.1.0
      */
     public function setCustomPost($function)
     {
@@ -294,15 +292,16 @@ class PhpFlickr
 
     /**
      * Submit a POST request to Flickr. If a custom POST callback is set, that will be used.
-     * @deprecated since 4.1.0
      * @param string[] $data The request parameters, with a 'method' element.
      * @param mixed $type If null, the Flickr REST endpoint will be passed to a custom post()
      * method (if one is defined; see PhpFlickr::setCustomPast()). Must be non-null for use without
      * a custom POST callback.
      * @return string The response body.
      * @throws Exception
+     * @deprecated since 4.1.0
      */
-    public function post($data, $type = null) {
+    public function post($data, $type = null)
+    {
         if (is_null($type)) {
             $url = $this->rest_endpoint;
         }
@@ -355,21 +354,21 @@ class PhpFlickr
 
         $jsonResponse = json_decode($this->response, true);
         if (null === $jsonResponse) {
-            throw new FlickrException("Unable to decode Flickr response to $command request: ".$this->response);
+            throw new FlickrException("Unable to decode Flickr response to $command request: " . $this->response);
         }
         $this->parsed_response = $this->cleanTextNodes($jsonResponse);
         if ($this->parsed_response['stat'] === 'fail') {
-             throw new FlickrException($this->parsed_response['message'], $this->parsed_response['code']);
+            throw new FlickrException($this->parsed_response['message'], $this->parsed_response['code']);
         }
         return $this->parsed_response;
     }
 
     /**
      * Normalize text nodes in API results.
-     * @deprecated Access will be private in new versions.
-     * @private
      * @param mixed $arr The node to normalize.
      * @return mixed
+     * @deprecated Access will be private in new versions.
+     * @private
      */
     public function cleanTextNodes($arr)
     {
@@ -383,7 +382,7 @@ class PhpFlickr
             foreach ($arr as $key => $element) {
                 $arr[$key] = $this->cleanTextNodes($element);
             }
-            return($arr);
+            return ($arr);
         }
     }
 
@@ -413,8 +412,8 @@ class PhpFlickr
     }
 
     /**
-     * @deprecated Requests throw exceptions now.
      * @return int|bool
+     * @deprecated Requests throw exceptions now.
      */
     public function getErrorCode()
     {
@@ -422,8 +421,8 @@ class PhpFlickr
     }
 
     /**
-     * @deprecated Requests throw exceptions now.
      * @return string|bool
+     * @deprecated Requests throw exceptions now.
      */
     public function getErrorMsg()
     {
@@ -458,7 +457,8 @@ class PhpFlickr
         $is_public = null,
         $is_friend = null,
         $is_family = null
-    ) {
+    )
+    {
         return $this->uploader()->upload(
             $photo,
             $title,
@@ -481,7 +481,8 @@ class PhpFlickr
         $is_public = null,
         $is_friend = null,
         $is_family = null
-    ) {
+    )
+    {
         return $this->uploader()->upload(
             $photo,
             $title,
@@ -499,15 +500,16 @@ class PhpFlickr
     /**
      * @deprecated use $this->uploader()->replace() instead.
      */
-    public function replace($photo, $photo_id, $async = null) {
+    public function replace($photo, $photo_id, $async = null)
+    {
         return $this->uploader()->replace($photo, $photo_id, $async);
     }
 
     /**
-     * @deprecated Use PhpFlickr::getAuthUrl() instead, and do your own redirecting.
      * @param string $perms
      * @param bool $remember_uri
      * @return mixed
+     * @deprecated Use PhpFlickr::getAuthUrl() instead, and do your own redirecting.
      */
     public function auth($perms = "read", $remember_uri = true)
     {
@@ -518,10 +520,10 @@ class PhpFlickr
     }
 
     /**
-     * @deprecated since 4.1.0; use PhpFlickr::getAuthUrl() instead.
      * @param string $frob
      * @param string $perms
      * @return string
+     * @deprecated since 4.1.0; use PhpFlickr::getAuthUrl() instead.
      */
     public function auth_url($frob, $perms = 'read')
     {
@@ -587,7 +589,7 @@ class PhpFlickr
      */
     public function retrieveAccessToken($verifier, $requestToken = null)
     {
-        $service = $this->getOauthService('oob');
+        $service = $this->getOauthService();
         $storage = $this->getOauthTokenStorage();
         /** @var \OAuth\OAuth1\Token\TokenInterface $token */
         $token = $storage->retrieveAccessToken('Flickr');
@@ -615,7 +617,8 @@ class PhpFlickr
      * @return TokenStorageInterface
      * @throws FlickrException If the token storage has not been set yet.
      */
-    public function getOauthTokenStorage() {
+    public function getOauthTokenStorage()
+    {
         if (!$this->oauthTokenStorage instanceof TokenStorageInterface) {
             // If no storage has yet been set, create an in-memory one with an empty token.
             // This will be suitable for un-authenticated API calls.
@@ -629,10 +632,10 @@ class PhpFlickr
      * Make a call to the Flickr API. This method allows you to call API methods that have not
      * yet been implemented in PhpFlickr. You should use other more specific methods of this
      * class if possible.
-     * @deprecated
      * @param string $method The API method name.
      * @param string[] $arguments The API method arguments.
      * @return string[]|bool The results of the call, or false if there were none.
+     * @deprecated
      */
     public function call($method, $arguments)
     {
@@ -695,7 +698,7 @@ class PhpFlickr
      */
     public function auth_getFullToken($mini_token)
     {
-        $this->request('flickr.auth.getFullToken', array('mini_token'=>$mini_token));
+        $this->request('flickr.auth.getFullToken', array('mini_token' => $mini_token));
         return $this->parsed_response ? $this->parsed_response['auth'] : false;
     }
 
@@ -707,7 +710,7 @@ class PhpFlickr
      */
     public function auth_getToken($frob)
     {
-        $this->request('flickr.auth.getToken', array('frob'=>$frob));
+        $this->request('flickr.auth.getToken', array('frob' => $frob));
         $_SESSION['phpFlickr_auth_token'] = $this->parsed_response['auth']['token'];
         return $this->parsed_response ? $this->parsed_response['auth'] : false;
     }
@@ -734,7 +737,7 @@ class PhpFlickr
     /**
      * @deprecated
      */
-    public function blogs_postPhoto($blog_id = null, $photo_id, $title, $description, $blog_password = null, $service = null)
+    public function blogs_postPhoto($photo_id, $title, $description, $blog_id = null, $blog_password = null, $service = null)
     {
         /* https://www.flickr.com/services/api/flickr.blogs.postPhoto.html */
         return $this->call('flickr.blogs.postPhoto', array('blog_id' => $blog_id, 'photo_id' => $photo_id, 'title' => $title, 'description' => $description, 'blog_password' => $blog_password, 'service' => $service));
@@ -773,7 +776,7 @@ class PhpFlickr
     public function contacts_getList($filter = null, $page = null, $per_page = null)
     {
         /* https://www.flickr.com/services/api/flickr.contacts.getList.html */
-        $this->request('flickr.contacts.getList', array('filter'=>$filter, 'page'=>$page, 'per_page'=>$per_page));
+        $this->request('flickr.contacts.getList', array('filter' => $filter, 'page' => $page, 'per_page' => $per_page));
         return $this->parsed_response ? $this->parsed_response['contacts'] : false;
     }
 
@@ -783,7 +786,7 @@ class PhpFlickr
     public function contacts_getPublicList($user_id, $page = null, $per_page = null)
     {
         /* https://www.flickr.com/services/api/flickr.contacts.getPublicList.html */
-        $this->request('flickr.contacts.getPublicList', array('user_id'=>$user_id, 'page'=>$page, 'per_page'=>$per_page));
+        $this->request('flickr.contacts.getPublicList', array('user_id' => $user_id, 'page' => $page, 'per_page' => $per_page));
         return $this->parsed_response ? $this->parsed_response['contacts'] : false;
     }
 
@@ -802,8 +805,8 @@ class PhpFlickr
     public function favorites_add($photo_id)
     {
         /* https://www.flickr.com/services/api/flickr.favorites.add.html */
-        $this->request('flickr.favorites.add', array('photo_id'=>$photo_id), true);
-        return $this->parsed_response ? true : false;
+        $this->request('flickr.favorites.add', array('photo_id' => $photo_id), true);
+        return (bool)$this->parsed_response;
     }
 
     /**
@@ -831,7 +834,7 @@ class PhpFlickr
     {
         /* https://www.flickr.com/services/api/flickr.favorites.remove.html */
         $this->request("flickr.favorites.remove", array('photo_id' => $photo_id, 'user_id' => $user_id), true);
-        return $this->parsed_response ? true : false;
+        return (bool)$this->parsed_response;
     }
 
     /**
@@ -921,7 +924,7 @@ class PhpFlickr
     public function groups_browse($cat_id = null)
     {
         /* https://www.flickr.com/services/api/flickr.groups.browse.html */
-        $this->request("flickr.groups.browse", array("cat_id"=>$cat_id));
+        $this->request("flickr.groups.browse", array("cat_id" => $cat_id));
         return $this->parsed_response ? $this->parsed_response['category'] : false;
     }
 
@@ -940,7 +943,7 @@ class PhpFlickr
     public function groups_search($text, $per_page = null, $page = null)
     {
         /* https://www.flickr.com/services/api/flickr.groups.search.html */
-        $this->request("flickr.groups.search", array("text"=>$text,"per_page"=>$per_page,"page"=>$page));
+        $this->request("flickr.groups.search", array("text" => $text, "per_page" => $per_page, "page" => $page));
         return $this->parsed_response ? $this->parsed_response['groups'] : false;
     }
 
@@ -961,8 +964,8 @@ class PhpFlickr
     public function groups_pools_add($photo_id, $group_id)
     {
         /* https://www.flickr.com/services/api/flickr.groups.pools.add.html */
-        $this->request("flickr.groups.pools.add", array("photo_id"=>$photo_id, "group_id"=>$group_id), true);
-        return $this->parsed_response ? true : false;
+        $this->request("flickr.groups.pools.add", array("photo_id" => $photo_id, "group_id" => $group_id), true);
+        return (bool)$this->parsed_response;
     }
 
     /**
@@ -980,7 +983,7 @@ class PhpFlickr
     public function groups_pools_getGroups($page = null, $per_page = null)
     {
         /* https://www.flickr.com/services/api/flickr.groups.pools.getGroups.html */
-        $this->request("flickr.groups.pools.getGroups", array('page'=>$page, 'per_page'=>$per_page));
+        $this->request("flickr.groups.pools.getGroups", array('page' => $page, 'per_page' => $per_page));
         return $this->parsed_response ? $this->parsed_response['groups'] : false;
     }
 
@@ -1002,8 +1005,8 @@ class PhpFlickr
     public function groups_pools_remove($photo_id, $group_id)
     {
         /* https://www.flickr.com/services/api/flickr.groups.pools.remove.html */
-        $this->request("flickr.groups.pools.remove", array("photo_id"=>$photo_id, "group_id"=>$group_id), true);
-        return $this->parsed_response ? true : false;
+        $this->request("flickr.groups.pools.remove", array("photo_id" => $photo_id, "group_id" => $group_id), true);
+        return (bool)$this->parsed_response;
     }
 
     /**
@@ -1084,9 +1087,9 @@ class PhpFlickr
     }
 
     /**
-     * @deprecated
      * @param $find_email
      * @return bool|string
+     * @deprecated
      */
     public function people_findByEmail($find_email)
     {
@@ -1094,9 +1097,9 @@ class PhpFlickr
     }
 
     /**
-     * @deprecated
      * @param $username
      * @return bool
+     * @deprecated
      */
     public function people_findByUsername($username)
     {
@@ -1109,15 +1112,15 @@ class PhpFlickr
     public function people_getInfo($user_id)
     {
         /* https://www.flickr.com/services/api/flickr.people.getInfo.html */
-        $this->request("flickr.people.getInfo", array("user_id"=>$user_id));
+        $this->request("flickr.people.getInfo", array("user_id" => $user_id));
         return $this->parsed_response ? $this->parsed_response['person'] : false;
     }
 
     /**
-     * @deprecated
      * @param $user_id
      * @param array $args
      * @return bool|string[]
+     * @deprecated
      */
     public function people_getPhotos($user_id, $args = array())
     {
@@ -1132,7 +1135,7 @@ class PhpFlickr
          * list of arguments.
          */
 
-         /* https://www.flickr.com/services/api/flickr.people.getPhotos.html */
+        /* https://www.flickr.com/services/api/flickr.people.getPhotos.html */
         return $this->call('flickr.people.getPhotos', array_merge(array('user_id' => $user_id), $args));
     }
 
@@ -1151,7 +1154,7 @@ class PhpFlickr
     public function people_getPublicGroups($user_id)
     {
         /* https://www.flickr.com/services/api/flickr.people.getPublicGroups.html */
-        $this->request("flickr.people.getPublicGroups", array("user_id"=>$user_id));
+        $this->request("flickr.people.getPublicGroups", array("user_id" => $user_id));
         return $this->parsed_response ? $this->parsed_response['groups']['group'] : false;
     }
 
@@ -1176,11 +1179,11 @@ class PhpFlickr
     }
 
     /**
-     * @deprecated Use $this->photos()->addTags() instead.
      * @param string $photoId
      * @param string|string[] $tags
      * @return bool
      * @throws FlickrException
+     * @deprecated Use $this->photos()->addTags() instead.
      */
     public function photos_addTags($photoId, $tags)
     {
@@ -1252,13 +1255,13 @@ class PhpFlickr
     }
 
     /**
-     * @deprecated Use $this->photos()->getInfo() instead.
      * @param $photo_id
      * @param null $secret
      * @param null $humandates
      * @param null $privacy_filter
      * @param null $get_contexts
      * @return bool|string[]
+     * @deprecated Use $this->photos()->getInfo() instead.
      */
     public function photos_getInfo($photo_id, $secret = null, $humandates = null, $privacy_filter = null, $get_contexts = null)
     {
@@ -1280,7 +1283,7 @@ class PhpFlickr
     public function photos_getPerms($photo_id)
     {
         /* https://www.flickr.com/services/api/flickr.photos.getPerms.html */
-        $this->request("flickr.photos.getPerms", array("photo_id"=>$photo_id));
+        $this->request("flickr.photos.getPerms", array("photo_id" => $photo_id));
         return $this->parsed_response ? $this->parsed_response['perms'] : false;
     }
 
@@ -1301,9 +1304,9 @@ class PhpFlickr
     }
 
     /**
-     * @deprecated Use $this->photos()->getSizes() instead.
      * @param int $photoId The photo ID.
      * @return bool|string[]
+     * @deprecated Use $this->photos()->getSizes() instead.
      */
     public function photos_getSizes($photoId)
     {
@@ -1364,8 +1367,8 @@ class PhpFlickr
     public function photos_removeTag($tag_id)
     {
         /* https://www.flickr.com/services/api/flickr.photos.removeTag.html */
-        $this->request("flickr.photos.removeTag", array("tag_id"=>$tag_id), true);
-        return $this->parsed_response ? true : false;
+        $this->request("flickr.photos.removeTag", array("tag_id" => $tag_id), true);
+        return (bool)$this->parsed_response;
     }
 
     /**
@@ -1407,8 +1410,8 @@ class PhpFlickr
     public function photos_setPerms($photo_id, $is_public, $is_friend, $is_family, $perm_comment, $perm_addmeta)
     {
         /* https://www.flickr.com/services/api/flickr.photos.setPerms.html */
-        $this->request("flickr.photos.setPerms", array("photo_id"=>$photo_id, "is_public"=>$is_public, "is_friend"=>$is_friend, "is_family"=>$is_family, "perm_comment"=>$perm_comment, "perm_addmeta"=>$perm_addmeta), true);
-        return $this->parsed_response ? true : false;
+        $this->request("flickr.photos.setPerms", array("photo_id" => $photo_id, "is_public" => $is_public, "is_friend" => $is_friend, "is_family" => $is_family, "perm_comment" => $perm_comment, "perm_addmeta" => $perm_addmeta), true);
+        return (bool)$this->parsed_response;
     }
 
     /**
@@ -1434,7 +1437,7 @@ class PhpFlickr
     public function photos_comments_addComment($photo_id, $comment_text)
     {
         /* https://www.flickr.com/services/api/flickr.photos.comments.addComment.html */
-        $this->request("flickr.photos.comments.addComment", array("photo_id" => $photo_id, "comment_text"=>$comment_text), true);
+        $this->request("flickr.photos.comments.addComment", array("photo_id" => $photo_id, "comment_text" => $comment_text), true);
         return $this->parsed_response ? $this->parsed_response['comment'] : false;
     }
 
@@ -1445,7 +1448,7 @@ class PhpFlickr
     {
         /* https://www.flickr.com/services/api/flickr.photos.comments.deleteComment.html */
         $this->request("flickr.photos.comments.deleteComment", array("comment_id" => $comment_id), true);
-        return $this->parsed_response ? true : false;
+        return (bool)$this->parsed_response;
     }
 
     /**
@@ -1454,8 +1457,8 @@ class PhpFlickr
     public function photos_comments_editComment($comment_id, $comment_text)
     {
         /* https://www.flickr.com/services/api/flickr.photos.comments.editComment.html */
-        $this->request("flickr.photos.comments.editComment", array("comment_id" => $comment_id, "comment_text"=>$comment_text), true);
-        return $this->parsed_response ? true : false;
+        $this->request("flickr.photos.comments.editComment", array("comment_id" => $comment_id, "comment_text" => $comment_text), true);
+        return (bool)$this->parsed_response;
     }
 
     /**
@@ -1500,7 +1503,7 @@ class PhpFlickr
     public function photos_geo_getLocation($photo_id)
     {
         /* https://www.flickr.com/services/api/flickr.photos.geo.getLocation.html */
-        $this->request("flickr.photos.geo.getLocation", array("photo_id"=>$photo_id));
+        $this->request("flickr.photos.geo.getLocation", array("photo_id" => $photo_id));
         return $this->parsed_response ? $this->parsed_response['photo'] : false;
     }
 
@@ -1510,7 +1513,7 @@ class PhpFlickr
     public function photos_geo_getPerms($photo_id)
     {
         /* https://www.flickr.com/services/api/flickr.photos.geo.getPerms.html */
-        $this->request("flickr.photos.geo.getPerms", array("photo_id"=>$photo_id));
+        $this->request("flickr.photos.geo.getPerms", array("photo_id" => $photo_id));
         return $this->parsed_response ? $this->parsed_response['perms'] : false;
     }
 
@@ -1529,8 +1532,8 @@ class PhpFlickr
     public function photos_geo_removeLocation($photo_id)
     {
         /* https://www.flickr.com/services/api/flickr.photos.geo.removeLocation.html */
-        $this->request("flickr.photos.geo.removeLocation", array("photo_id"=>$photo_id), true);
-        return $this->parsed_response ? true : false;
+        $this->request("flickr.photos.geo.removeLocation", array("photo_id" => $photo_id), true);
+        return (bool)$this->parsed_response;
     }
 
     /**
@@ -1593,7 +1596,7 @@ class PhpFlickr
     {
         /* https://www.flickr.com/services/api/flickr.photos.notes.delete.html */
         $this->request("flickr.photos.notes.delete", array("note_id" => $note_id), true);
-        return $this->parsed_response ? true : false;
+        return (bool)$this->parsed_response;
     }
 
     /**
@@ -1603,7 +1606,7 @@ class PhpFlickr
     {
         /* https://www.flickr.com/services/api/flickr.photos.notes.edit.html */
         $this->request("flickr.photos.notes.edit", array("note_id" => $note_id, "note_x" => $note_x, "note_y" => $note_y, "note_w" => $note_w, "note_h" => $note_h, "note_text" => $note_text), true);
-        return $this->parsed_response ? true : false;
+        return (bool)$this->parsed_response;
     }
 
     /* Photos - Transform Methods */
@@ -1611,7 +1614,7 @@ class PhpFlickr
     {
         /* https://www.flickr.com/services/api/flickr.photos.transform.rotate.html */
         $this->request("flickr.photos.transform.rotate", array("photo_id" => $photo_id, "degrees" => $degrees), true);
-        return $this->parsed_response ? true : false;
+        return (bool)$this->parsed_response;
     }
 
     /**
@@ -1791,7 +1794,7 @@ class PhpFlickr
     public function photosets_comments_addComment($photoset_id, $comment_text)
     {
         /* https://www.flickr.com/services/api/flickr.photosets.comments.addComment.html */
-        $this->request("flickr.photosets.comments.addComment", array("photoset_id" => $photoset_id, "comment_text"=>$comment_text), true);
+        $this->request("flickr.photosets.comments.addComment", array("photoset_id" => $photoset_id, "comment_text" => $comment_text), true);
         return $this->parsed_response ? $this->parsed_response['comment'] : false;
     }
 
@@ -1802,7 +1805,7 @@ class PhpFlickr
     {
         /* https://www.flickr.com/services/api/flickr.photosets.comments.deleteComment.html */
         $this->request("flickr.photosets.comments.deleteComment", array("comment_id" => $comment_id), true);
-        return $this->parsed_response ? true : false;
+        return (bool)$this->parsed_response;
     }
 
     /**
@@ -1811,8 +1814,8 @@ class PhpFlickr
     public function photosets_comments_editComment($comment_id, $comment_text)
     {
         /* https://www.flickr.com/services/api/flickr.photosets.comments.editComment.html */
-        $this->request("flickr.photosets.comments.editComment", array("comment_id" => $comment_id, "comment_text"=>$comment_text), true);
-        return $this->parsed_response ? true : false;
+        $this->request("flickr.photosets.comments.editComment", array("comment_id" => $comment_id, "comment_text" => $comment_text), true);
+        return (bool)$this->parsed_response;
     }
 
     /**
@@ -1821,7 +1824,7 @@ class PhpFlickr
     public function photosets_comments_getList($photoset_id)
     {
         /* https://www.flickr.com/services/api/flickr.photosets.comments.getList.html */
-        $this->request("flickr.photosets.comments.getList", array("photoset_id"=>$photoset_id));
+        $this->request("flickr.photosets.comments.getList", array("photoset_id" => $photoset_id));
         return $this->parsed_response ? $this->parsed_response['comments'] : false;
     }
 
@@ -2253,53 +2256,53 @@ class PhpFlickr
         return $this->test()->login();
     }
 
-	/**
-	 * @deprecated
-	 */
-	public function urls_getGroup($group_id)
-	{
-		return $this->urls()->getGroup($group_id);
-	}
+    /**
+     * @deprecated
+     */
+    public function urls_getGroup($group_id)
+    {
+        return $this->urls()->getGroup($group_id);
+    }
 
-	/**
-	 * @deprecated
-	 */
-	public function urls_getUserPhotos($user_id = null)
-	{
-		return $this->urls()->getUserPhotos($user_id);
-	}
+    /**
+     * @deprecated
+     */
+    public function urls_getUserPhotos($user_id = null)
+    {
+        return $this->urls()->getUserPhotos($user_id);
+    }
 
-	/**
-	 * @deprecated
-	 */
-	public function urls_getUserProfile($user_id = null)
-	{
-		return $this->urls()->getUserProfile($user_id);
-	}
+    /**
+     * @deprecated
+     */
+    public function urls_getUserProfile($user_id = null)
+    {
+        return $this->urls()->getUserProfile($user_id);
+    }
 
-	/**
-	 * @deprecated
-	 */
-	public function urls_lookupGallery($url)
-	{
-		return $this->urls()->lookupGallery($url);
-	}
+    /**
+     * @deprecated
+     */
+    public function urls_lookupGallery($url)
+    {
+        return $this->urls()->lookupGallery($url);
+    }
 
-	/**
-	 * @deprecated
-	 */
-	public function urls_lookupGroup($url)
-	{
-		return $this->urls()->lookupGroup($url);
-	}
+    /**
+     * @deprecated
+     */
+    public function urls_lookupGroup($url)
+    {
+        return $this->urls()->lookupGroup($url);
+    }
 
-	/**
-	 * @deprecated
-	 */
-	public function urls_lookupUser($url)
-	{
-		return $this->urls()->lookupUser($url);
-	}
+    /**
+     * @deprecated
+     */
+    public function urls_lookupUser($url)
+    {
+        return $this->urls()->lookupUser($url);
+    }
 
     public function blogs()
     {

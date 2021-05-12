@@ -139,7 +139,7 @@ class PhotosApi extends ApiMethodGroup
             'extras' => $extras
         ];
         $response = $this->flickr->request('flickr.photos.getContactsPhotos', $params);
-        return isset($response['photos']['photo']) ? $response['photos']['photo'] : false;
+        return $response['photos']['photo'] ?? false;
     }
 
     /**
@@ -180,7 +180,7 @@ class PhotosApi extends ApiMethodGroup
             'extras' => $extras
         ];
         $response = $this->flickr->request('flickr.photos.getContactsPublicPhotos', $params);
-        return isset($response['photos']['photo']) ? $response['photos']['photo'] : false;
+        return $response['photos']['photo'] ?? false;
     }
 
     /**
@@ -219,7 +219,7 @@ class PhotosApi extends ApiMethodGroup
         }
         $params = ['dates' => $dates, 'taken_dates' => $takenDates];
         $response = $this->flickr->request('flickr.photos.getCounts', $params);
-        return isset($response['photocounts']['photocount']) ? $response['photocounts']['photocount'] : false;
+        return $response['photocounts']['photocount'] ?? false;
     }
 
     /**
@@ -236,7 +236,7 @@ class PhotosApi extends ApiMethodGroup
     public function getExif($photoId, $secret = null)
     {
         $response = $this->flickr->request('flickr.photos.getExif', ['photo_id' => $photoId, 'secret' => $secret]);
-        return isset($response['photo']) ? $response['photo'] : false;
+        return $response['photo'] ?? false;
     }
 
     /**
@@ -255,7 +255,7 @@ class PhotosApi extends ApiMethodGroup
     {
         $params = ['photo_id' => $photoId, 'page' => $page, 'per_page' => $perPage];
         $response = $this->flickr->request('flickr.photos.getFavorites', $params);
-        return isset($response['photo']) ? $response['photo'] : false;
+        return $response['photo'] ?? false;
     }
 
     /**
@@ -274,7 +274,7 @@ class PhotosApi extends ApiMethodGroup
     {
         $params = ['photo_id' => $photoId, 'secret' => $secret];
         $response = $this->flickr->request('flickr.photos.getInfo', $params);
-        return isset($response['photo']) ? $response['photo'] : false;
+        return $response['photo'] ?? false;
     }
 
     /**
@@ -436,7 +436,7 @@ class PhotosApi extends ApiMethodGroup
         }
         $args = ['extras' => $extras, 'per_page' => $perPage, 'page' => $page ];
         $result = $this->flickr->request('flickr.photos.getRecent', $args);
-        return isset($result['photos']['photo']) ? $result['photos']['photo'] : false;
+        return $result['photos']['photo'] ?? false;
     }
 
     /**
@@ -499,7 +499,7 @@ class PhotosApi extends ApiMethodGroup
             'flickr.photos.getSizes',
             ['photo_id' => $photoId]
         );
-        return isset($response['sizes']) ? $response['sizes'] : false;
+        return $response['sizes'] ?? false;
     }
 
     /**
@@ -810,7 +810,7 @@ class PhotosApi extends ApiMethodGroup
     public function search($args)
     {
         $result = $this->flickr->request('flickr.photos.search', $args);
-        return isset($result['photos']) ? $result['photos'] : false;
+        return $result['photos'] ?? false;
     }
 
     /**

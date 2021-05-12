@@ -32,7 +32,7 @@ class TestApi extends ApiMethodGroup
     {
         try {
             $response = $this->flickr->request('flickr.test.login', [], true);
-            return isset($response['user']) ? $response['user'] : false;
+            return $response['user'] ?? false;
         } catch (TokenResponseException $exception) {
             return false;
         }
